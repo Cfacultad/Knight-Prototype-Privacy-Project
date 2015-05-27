@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html manifest="offline.appcache">
+<head>
+    <meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Internet Privacy</title>
+	
+	<!-- sStandardised web app manifest -->
+	<link rel="manifest" href="app.manifest" />
+	
+	<!-- Allow fullscreen mode on iOS devices. (These are Apple specific meta tags.) -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="apple-touch-icon" sizes="256x256" href="icon-256.png" />
+	<meta name="HandheldFriendly" content="true" />
+	
+	<!-- Chrome for Android web app tags -->
+	<meta name="mobile-web-app-capable" content="yes" />
+	<link rel="shortcut icon" sizes="256x256" href="icon-256.png" />
+
+    <!-- All margins and padding must be zero for the canvas to fill the screen. -->
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		body {
+		height: 100vh;
+		}
+		html, body {
+			background: #C0C0C0;
+			color: #000;
+			overflow: hidden;
+			touch-action: none;
+			-ms-touch-action: none;
+            line-height: 1.4em;
+			height: 100%
+		}
+        
+		canvas {
+			touch-action-delay: none;
+			touch-action: none;
+			-ms-touch-action: none;
+		}
+        #left {
+			width: 30%;
+			padding: 20px;
+			float: left;
+            touch-action: auto;
+			overflow: auto;
+			height: 100vh;
+			top: 0;
+bottom: 0;
+			
+        }
+
+        
+        #wrapper p {
+            margin: 0 auto 1em;
+        }
+        
+        ol, ul {
+            margin-bottom: 10px;
+        }
+        
+        ul.list-unstyled {
+            list-style-type: none;
+        }
+        
+        ol.alpha-answers {
+            list-style-type: upper-alpha;
+            margin-left: 20px;
+        }
+        
+		#wrapper {
+		width: 100%;
+		float:left;
+		}
+        
+        .show-link {
+            display:none;
+        }
+        
+        @media print {
+            #left {
+                width:95%;
+            }
+            #c2canvasdiv {
+                display:none;
+            }
+            .show-link {
+                display:inline !important;
+            }                  
+        }
+		
+    </style>
+	
+
+</head> 
+ 
+<body> 
+
+<div id="wrapper">
+		<div id="left"><div id="leftText"><h2>San Jose Public Library Privacy Game</h2><h3>Level: Social Media</h3><p>Welcome to the game! In this module we will learn about Social Media and how you can take better measures to protect your privacy on the Internet. Your goal is to collect all of the golden discs to learn more about Social Media. You can move your character using the arrow keys.</p></div></div> <!--end leftText-->
+	<script>
+	r = 0
+	a = 0
+	var pathcode_a = 'a1'
+	var pathcode_r = 'r2'
+	TALK ='<h3>Communicate About Privacy:</h3>'
+	TALKYOU = '<p>Talk to friends and family about what information you prefer to keep private, and what you would or wouldn\'t be comfortable with them posting about you.</p>'
+	TALKTHEM = '<p>Make sure you know your friends\' and family\'s preferences about online privacy. Before you refer to other people in your posts, post photos of them, or tag them in posts or photos, ask yourself how they would feel about the post. If you don’t know someone\'s preferences, try to avoid mentioning them on social media. Use this handy decision guide as a reminder:</p>\
+    <ul>\
+	<li>Flow Chart for Deciding Whether to Post: <a href="https://www.commonsensemedia.org/educators/middlehigh_poster">I Took a Photo of My Friend That I Want to Share... Now What?</a> <span class="show-link">(https://www.commonsensemedia.org/educators/middlehigh_poster)</span></li>\
+    </ul>'
+	ASK1 = '<h3>Think About Consequences</h3>\
+    <p>Before you post information or images on social media, ask yourself the following:</p>\
+	<ul>\
+		<li>If this post became public, what would my extended family think?</li>\
+		<li>What would my employer or a potential employer think?</li>\
+		<li>What would my a neighbor think?</li>\
+	</ul>'
+	SEARCH = '<h3>Learn About Privacy:</h3>\
+    <p>Periodically search for yourself using a search engine to see what information others can see about you. Include an image search.</p>'
+	SET1 = '<h3>Adjust Your Privacy Settings:</h3>\
+    <p>Review your privacy settings on your social-media and other accounts and on your apps and communication devices, to make sure you\'re sharing what you want to share. Use these guides to help you identify and change the settings most important to you:</p>\
+    <ul>\
+	   <li>Directory of Resources for Managing Your Settings: <a href="http://teachingprivacy.icsi.berkeley.edu/prevention/">Privacy Settings How-To\'s</a> <span class="show-link">(http://teachingprivacy.icsi.berkeley.edu/prevention/)</span></li>\
+	   <li>Worksheet (pdf): <a href="http://teachingprivacy.icsi.berkeley.edu/wp-content/uploads/2015/03/Managing_Your_Footprint.pdf">Managing Your Footprint: A Privacy Settings Checklist</a> <span class="show-link">(http://teachingprivacy.icsi.berkeley.edu/wp-content/uploads/2015/03/Managing_Your_Footprint.pdf)</span></li>\
+    </ul>'
+	SETREV = '<p>On social-media sites, use the privacy settings that limit what other people can post about you, such as requiring your approval for people to post on your timeline or tag you in photos, or whether other people can "check you into" a place.</p>'
+	ASK2 = '<ul>\
+		      <li>For that matter, what will my target audience think when they see this?</li>\
+		      <li>Will everyone who could see this have my best interests at heart?</li>\
+	       </ul>'
+	SET2 = '<p>You may want to use different settings for different accounts, on different social networks, or for different apps, depending who you primarily use them to communicate with.</p>\
+    <ol>\
+	   <li>Some settings we recommend reviewing include:\
+		  <ul>\
+			 <li>Location services and frequent places (on apps, sites, and devices);</li>\
+			 <li>Automatically limiting the audience for your old posts;</li>\
+			 <li>Sharing your information with third parties/other companies ("marketing affiliates", etc.).</li>\
+		  </ul>\
+	   </li>\
+	   <li>Use this tool to see what people can learn about you from your social-media posts:\
+		  <ul>\
+			 <li>Educational App That Shows What Data You\'re Leaking: <a href="http://app.teachingprivacy.com/">Ready or Not?</a> <span class="show-link">(http://app.teachingprivacy.com/)</span></li>\
+		  </ul>\
+	   </li>\
+	   <li>Keep reviewing your settings on a regular basis, and when you get a new account, app, or device, start by reviewing its privacy settings.</li>\
+    </ol>'
+	PERSONA = '<p>If you want to post details about your crazy hijinks, air your political views, or be open about your religious affiliation or sexual orientation, but you don\'t want your employer or your grandmother see it, you can register for social-media accounts using a false name, or have multiple accounts under different names. (However, there are many ways someone could find out which accounts are yours, so this method doesn\'t guarantee privacy; it just makes you a little harder to find. Note that this is against the terms of service for some social media sites, so it is possible they could close the account if they found out.)</p>'
+	CUST = '<p>Before you post, ask yourself who you particularly want to have see this information, and set the audience for the post to include only those people.</p>\
+    <ol>\
+	   <li>Some social networking sites allow you to create "custom lists" or "circles" in your account settings (such as "close family" or "work friends") that you can post to. (But note that on some sites, like Facebook, each person in a custom list can see the names of the others who can see the post.)</li>\
+	   <li>Some social networking sites let you specify that certain friends/contacts can only see your public postings, for example with Facebook\'s "Restricted" status.</li>\
+    </ol>\
+    <p>Use these instructions for major social media sites:</p>\
+    <ul>\
+	   <li>Help Page for Custom Lists and Restricted Status on Facebook and Instagram: <a href="https://www.facebook.com/help/204604196335128/">Lists for Friends</a> <span class="show-link">(https://www.facebook.com/help/204604196335128/)</span></li>\
+	   <li>Instruction Video for Circles on Google Plus: <a href="https://www.google.com/+/learnmore/circles/">About Circles</a> <span clas="show-link">(https://www.google.com/+/learnmore/circles/)</span></li>\
+    </ul>'
+	ACCT = '<h3>Manage Your Profiles:</h3>\
+    <p>Close or delete your old social media and other online accounts. (However, remember that your data may still be backed up somewhere, especially if others have reposted it. Closing old accounts doesn\'t guarantee the information won\'t be found, it just makes it less likely.)<p>\
+    <ul>\
+	   <li>How-To Guide for Deleting Online Accounts: <a href="https://www.accountkiller.com/en/">Account Killer</a> <span class="show-link">(https://www.accountkiller.com/en/)</span></li>\
+    </ul>'
+	INTRO = '<p>Explore the ways that you can optimize your online privacy, according to your needs.</p>'
+	CHANGE = '<p>Before you post something on social media, ask yourself: Could my circumstances change such that this could be embarrassing in five years?</p>'
+	
+	
+	function TextSwapper(textCodeFromGame) {
+		var textCode = parseInt(textCodeFromGame);
+		var text = document.getElementById("leftText").innerHTML
+		textCode -= 1;
+		switch (textCode) {
+			case 0: 
+			text = '<h3>Communicating on Social Media</h3> \
+					<p>Social media is like an online bulletin board. Social media or social networking sites like Facebook, Twitter, YouTube, LinkedIn, Yelp, and Instagram are places where you post information and images in order to share them publicly. Some people use social media mainly to keep in touch with family or close friends, while others use it to promote a business or a project. These different activities may require different levels of privacy, or maybe even separate accounts.</p> \
+					<p>However you manage your online persona(s), your online life is part of your "real" life. When you post information on social media sites, you are sharing with real people. Some of your extended family, co-workers, and neighbors probably use social media sites. Even if they\'re not on your \'Friends\' list, any of them could potentially see the information you post&mdash;and they might not interpret it the way that you would expect</p>' + generatePDF();
+				
+				
+				break;
+			
+			case 1:
+				text += '<h3>Question Time!</h3> \
+				<ul class="list-unstyled">\
+                    <li>Who could potentially see the information or images you post on social media sites?</li>\
+				    <ol class="alpha-answers"> \
+                        <li>Only people on the Internet, not anyone you know in real life.</li>\
+				        <li>Only people you intentionally share with on social media sites, such as your family and close friends.</li>\
+				        <li>Everyone, including extended family, co-workers, and neighbors.</li>\
+                        <li>Only the government.</li></ol></ul>'
+				break;
+			case 2:
+				text = '<h3>Social Media Privacy Settings</h3>\
+                        <p>Most social media platforms have privacy settings, which are intended to restrict your information to being seen by a select group of people (usually called Friends, Contacts, or Followers). In practice, these privacy settings only reduce the chances of the selectively shared information becoming available to the public.</p>\
+                        <p>There may also be hidden information (metadata) attached to your photos or posts, such as their time and location. If you don\'t change your settings on sites and devices, if an app or service changes the configuration of settings, or even if you simply make a mistake, it\'s possible you could end up sharing your information publicly without knowing it.</p>'
+				break;
+			case 4:
+				text = '<h3>Leaks in the System</h3>\
+                        <p>Even if you handle your privacy settings perfectly, anyone who does see your information on social media can share it with others. Re-posting or making a copy of information is easy. For example, computers and phones can take screenshots: pictures of the images and text on their screens. These screenshots can then be shared with anyone who has Internet access. In other words, once you\'ve shared information online, you\'ll never have complete control over where it goes.</p>\
+                        <p>Privacy settings are more effective if the people you share information with know your standards of privacy. Avoiding social media doesn’t guarantee that your friends and family won’t post about you. It\'s important to tell your friends and family what you want to keep private, and ask them how they feel about sharing on social media.</p>\
+                        <p>Talking about privacy and adjusting your privacy settings carefully reduces the risk of people finding your private information, but it\'s likely that some information will leak out eventually. A good rule of thumb is to never post anything that you wouldn\'t want a co-worker, neighbor, or family member to see.</p>'
+				break;
+			case 3:
+				text += '<h3>Question Time!</h3>\
+                <ul class="list-unstyled">\
+                    <li>How do the privacy settings on social media sites work to protect your privacy?</li>\
+                    <ol class="alpha-answers">\
+                        <li>Social media sites assume you want maximum privacy, so you can just use their default privacy settings.</li>\
+                        <li>Social media sites assume you want to share with many people, but do offer other options. If you carefully adjust the privacy settings, your information will be as private as you want.</li>\
+                        <li>Because social media sites profit by you sharing more information, they generally assume you want to share your information with many people. But if you carefully adjust your privacy settings, you can reduce the risk of an information leak.</li>\
+                        <li>Through magic!</li></ol></ul>'
+				break;
+			case 5:
+				text += '<h3>Question Time!</h3>\
+                <ul class="list-unstyled">\
+                <li>What is the best way to make sure private social media posts aren\'t seen by people you don’t want to have see them?</li>\
+                    <ol class="alpha-answers">\
+                        <li>If you adjust your privacy settings correctly, your information will only be shared with the people you choose to share with.</li>\
+                        <li>If you don\'t ever post, there won\'t be any social media posts containing information you want to keep private.</li>\
+                        <li>If you adjust your privacy settings correctly and talk to friends and family about privacy, your information will be as private as you want it to be.</li>\
+                        <li>If you talk to friends and family about privacy, and dont ever post anything private on social media, your information will probably be as private as you want, but there is always a chance it will be leaked.</li></ol></ul>'
+				break;
+			case 6:
+				text = '<h3>Privacy Pathfinder Questions: What kind of user are you?</h3>\
+                <ul class="list-unstyled">\
+                <li>I generally avoid posting on social media.</li>\
+                    <ol class="alpha-answers">\
+                        <li>Strongly Agree</li>\
+                        <li>Somewhat Agree</li>\
+                        <li>Somewhat Disagree</li>\
+                        <li>Strongly Disagree</li></ol></ul>'
+				break;
+			case 7:
+				text = '<h3>Privacy Pathfinder Questions: What kind of user are you?</h3>\
+                <ul class="list-unstyled">\
+                <li>It\'s important to me to choose who sees the information I share on social media.</li>\
+                    <ol class="alpha-answers">\
+                        <li>Strongly Agree</li>\
+                        <li>Somewhat Agree</li>\
+                        <li>Somewhat Disagree</li>\
+                        <li>Strongly Disagree</li></ol></ul>'
+				break;
+			case 8:
+				text = '<h3>Privacy Pathfinder Questions: What kind of user are you?</h3>\
+                <ul class="list-unstyled">\
+                <li>I\'m worried that information or images I post on social media might be misused in ways that are harmful to me or others.</li>\
+                    <ol class="alpha-answers">\
+                        <li>Strongly Agree</li>\
+                        <li>Somewhat Agree</li>\
+                        <li>Somewhat Disagree</li>\
+                        <li>Strongly Disagree</li></ol></ul>'
+				break;
+			case 9:
+				text = '<h3>Privacy Pathfinder Questions: What kind of user are you?</h3>\
+                <ul class="list-unstyled">\
+                <li>I don\'t care what people think of me as a result of seeing what I post on social media.</li>\
+                    <ol class="alpha-answers">\
+                        <li>Strongly Agree</li>\
+                        <li>Somewhat Agree</li>\
+                        <li>Somewhat Disagree</li>\
+                        <li>Strongly Disagree</li></ol></ul>'
+				break;
+			case 10:
+				text = '<h2>Privacy Pathway</h2>\
+                        <p>Congratulations! You finished! Here is your privacy pathway, customized to your interests and preferences.</p>' + generatePDF();
+				
+				break;
+			default:
+				text = '<h2>San Jose Public Library Privacy Game</h2>\
+                        <p>Welcome to the game!</p>'
+				break;
+		}
+			document.getElementById("leftText").innerHTML = text;
+			}
+	
+			function answerQuestion(question_number) {
+	var text = document.getElementById("leftText").innerHTML
+	var number = parseInt(question_number);
+	
+		switch(number){
+			case 0:
+					text += '<h4>Correct!</h4>\
+                    <p>Social networking sites are designed to share information, not to keep it private. Posting information to a social networking site means that real people will see that information, possibly including family, co-workers, and neighbors.</p>'
+					
+					break;
+			case 1:
+					text += '<h4>Correct!</h4>\
+                    <p>Privacy settings on social media sites are usually full of loopholes that are difficult to close. Additionally, every time the site is updated or a new feature is introduced, new loopholes are opened. In other words, information posted to social media sites can easily be leaked. You may also need to take extra steps to remove hidden information (metadata) from your photos and posts.</p>'
+					break;
+			case 2:
+					text += '<h4>Correct!</h4>\
+                    <p>Copying information online is easy, and other people can post information about you, so correctly adjusting privacy settings does not guarantee that your information will remain private. The safest route would be not to use social media to share private information at all. To better secure your information, you need to talk to the people you share with, but even then, information may be leaked.</p>'
+					break;
+			case 3:
+				text += '<h4>Answer Recorded!</h4>'
+					if(question_response == 'a' || question_response == 'b')
+					{
+					a += 1;
+					}
+					else{
+					a -= 1;
+					}
+					break;
+			case 4:
+			text += '<h4>Answer Recorded!</h4>'
+					if(question_response == 'a' || question_response == 'b')
+					{
+					r += 1;
+					}
+					else{
+					r -= 1;
+					}
+					break;
+			case 5:
+			text += '<h4>Answer Recorded!</h4>'
+					if(question_response == 'a' || question_response == 'b')
+					{
+					r += 1;
+					}
+					else{
+					r -= 1;
+					}
+					break;
+			case 6:
+			text += '<h4>Answer Recorded!</h4>'
+					if(question_response == 'a' || question_response == 'b')
+					{
+					r -= 1;
+					}
+					else
+					{
+					r += 1;
+					}
+					
+					if(r==-3) { pathcode_r = "r2"}
+					else if(r<3 && r>-3) {pathcode_r = "r1"}
+					else if(r==3){pathcode_r = "r2"}
+					if(a==-1){pathcode_a="a0"}
+					else if (a==1) {pathcode_a="a1"}
+					
+					
+					
+					
+					break;
+			
+					
+			}
+
+			document.getElementById("leftText").innerHTML = text;
+			} 
+			function generatePDF(){
+		var text = ''
+		if(pathcode_a =='a0') {
+			text = INTRO + TALK + TALKYOU   + SEARCH 
+		} else if (pathcode_a == 'a1') {
+		switch(pathcode_r) {
+			case 'r0':
+				text = INTRO + TALK + TALKTHEM + ASK1 +SECTION_BREAK+ CHANGE +SET1
+				break;
+			case 'r1':
+				text = INTRO + TALK + TALKYOU  + TALKTHEM   + ASK1   + SEARCH   + SET1   + SETREV
+				break;
+			case 'r2':
+				text = INTRO + TALK + TALKYOU   + TALKTHEM   + ASK2   + SEARCH   + SET2   + SETREV   + CUST   + ACCT   + PERSONA
+				break;
+			default:
+				text = 'There was a problem with bringing you your feedback. Please contact the adminstrator.'
+				break;
+		}
+		}
+		
+		return text;
+		/*var doc = new jsPDF();
+		var specialElementHandlers = {
+			'#editor': function(element, renderer){
+				return true;
+			}
+		};
+
+		// All units are in the set measurement for the document
+		// This can be changed to "pt" (points), "mm" (Default), "cm", "in"
+	doc.fromHTML($('leftText').get(0), 15, 15, {
+	'width': 170, 
+	'elementHandlers': specialElementHandlers
+}); */
+	}
+			
+	
+		</script>
+
+
+
+	
+	<script>
+	// Issue a warning if trying to preview an exported project on disk.
+	(function(){
+		// Check for running exported on file protocol
+		if (window.location.protocol.substr(0, 4) === "file")
+		{
+			alert("Exported games won't work until you upload them. (When running on the file:/// protocol, browsers block many features from working for security reasons.)");
+		}
+	})();
+	</script>
+	
+	<!-- The canvas must be inside a div called c2canvasdiv -->
+	<div id="c2canvasdiv" style ="float: left">
+	
+		<!-- The canvas the project will render to.  If you change its ID, don't forget to change the
+		ID the runtime looks for in the jQuery events above (ready() and cr_sizeCanvas()). -->
+		<canvas id="c2canvas" width="900" height="700">
+			<!-- This text is displayed if the visitor's browser does not support HTML5.
+			You can change it, but it is a good idea to link to a description of a browser
+			and provide some links to download some popular HTML5-compatible browsers. -->
+			<h1>Your browser does not appear to support HTML5.  Try upgrading your browser to the latest version.  <a href="http://www.whatbrowser.org">What is a browser?</a>
+			<br/><br/><a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Microsoft Internet Explorer</a><br/>
+			<a href="http://www.mozilla.com/firefox/">Mozilla Firefox</a><br/>
+			<a href="http://www.google.com/chrome/">Google Chrome</a><br/>
+			<a href="http://www.apple.com/safari/download/">Apple Safari</a><br/>
+			<a href="http://www.google.com/chromeframe">Google Chrome Frame for Internet Explorer</a><br/></h1>
+		</canvas>
+		
+	</div>
+	</div>
+	<!-- Pages load faster with scripts at the bottom -->
+	
+	<!-- Import jquery -->
+	<script src="jquery-2.1.1.min.js"></script>
+
+
+	
+    <!-- The runtime script.  You can rename it, but don't forget to rename the reference here as well.
+    This file will have been minified and obfuscated if you enabled "Minify script" during export. -->
+	<script src="c2runtime.js"></script>
+
+    <script>
+		// Size the canvas to fill the browser viewport.
+		jQuery(window).resize(function() {
+			cr_sizeCanvas(jQuery(window).width(), jQuery(window).height());
+		});
+		
+		// Start the Construct 2 project running on window load.
+		jQuery(document).ready(function ()
+		{			
+			// Create new runtime using the c2canvas
+			cr_createRuntime("c2canvas");
+		});
+		
+		// Pause and resume on page becoming visible/invisible
+		function onVisibilityChanged() {
+			if (document.hidden || document.mozHidden || document.webkitHidden || document.msHidden)
+				cr_setSuspended(true);
+			else
+				cr_setSuspended(false);
+		};
+		
+		document.addEventListener("visibilitychange", onVisibilityChanged, false);
+		document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+		
+    </script>
+</body> 
+</html>
