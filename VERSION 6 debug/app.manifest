@@ -1,7 +1,7 @@
 ﻿{
 	"name": "New project",
 	"start_url": "/index.html",
-	"display": "fullscreen",
+	"display": "standalone",
 	"orientation": "landscape",
 	"icons": [{
 		"src": "icon-16.png",
